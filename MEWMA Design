@@ -1,0 +1,41 @@
+from tqdm import tqdm
+		import numpy as np
+		
+		np.random.seed(15)
+		m = 100
+		sim = 10000
+		n = 1 
+		p = 10
+		
+		lam = 0.8
+		lambda_values = lam*np.ones(p)
+		Lambda_ = np.diag(lambda_values)
+		
+		h = 29.75
+		CL = h
+		
+		total_runs = []
+		for i in tqdm(range(sim)):
+			Z_t_1 = np.matrix(np.zeros(p)).T
+		
+			xi = np.random.normal(0, 1, (m, p))
+			S = np.cov(xi, rowvar=False)
+			sig_Zi = lam/(2-lam) * S
+		
+			count = 0
+			signaled = False
+			total_run = 0
+		
+			while not signaled:
+				total_run += 1
+				yi = np.random.normal(0, 1, (n, p))
+		
+				Z_t = Lambda_ @ yi.T + (np.eye(p) - Lambda_) @ Z_t_1
+				Z_t_1 = Z_t
+		
+				if (Z_t.T @ np.linalg.inv(sig_Zi) @ Z_t) >= CL:
+				total_runs.append(total_run)
+				signaled = True
+		
+		run_lengths = np.array(total_runs)
+		print(f"Mean Run Length: {run_lengths.mean()}")
