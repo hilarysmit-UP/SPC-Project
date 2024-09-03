@@ -1,0 +1,29 @@
+trips = df[df['OOC Signal'] == 'True']
+	x=trips[['041LI228_MV.HSI.Value', 'S041LIC013B.HSI.MV', 'S204AI003_MV.HSI.Value', '041LI229_MV.HSI.Value', '204ZS004.Value', '204ZS003.Value',
+	'204ZS002.Value', '204ZS001.Value', 'S041NIC009.HSI.MV', '204LI013.MV.HSI.Value']]
+	y=trips['Reason']
+	
+	x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.3, random_state=5)
+	display(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
+	
+	model= SVC(kernel='linear',random_state=42)
+	model.fit(x_train, y_train)
+	
+	svc_prediction=model.predict(x_test)
+	accuracy_score = metrics.accuracy_score(y_test, svc_prediction)
+	print('Accuracy Score:', accuracy_score)
+	print('Accuracy in Percentage:', int(accuracy_score * 100), '%')
+	
+	confusion_matrix = metrics.confusion_matrix(y_test, svc_prediction)
+	print('Confusion Matrix:\n', confusion_matrix)
+	
+	classification_report = metrics.classification_report(y_test, svc_prediction)
+	print('Classification Report:\n', classification_report)
+	
+	precision = metrics.precision_score(y_test, svc_prediction, average='weighted')
+	recall = metrics.recall_score(y_test, svc_prediction, average='weighted')
+	f1_score = metrics.f1_score(y_test, svc_prediction, average='weighted')
+	
+	print('Precision:', precision)
+	print('Recall:', recall)
+	print('F1-Score:', f1_score)
